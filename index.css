@@ -1,0 +1,33 @@
+:root {
+	--primary-bg: #cccccc;
+	--primary-txt: #1a1a1a;
+}
+
+body, .form-control, .form-control:focus {
+	background-color: var(--primary-bg);
+	color: var(--primary-txt);
+}
+
+.border, .btn-outline-secondary {
+	border-color: inherit !important;
+}
+
+.btn-outline-secondary {
+	color: inherit;
+}
+
+.btn-outline-secondary:hover {
+	background-color: var(--primary-txt);
+	border-color: var(--primary-txt);
+	color: var(--primary-bg);
+}
+
+a, a:hover {
+	color: inherit;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.btn, label, #bg-hex, #font-hex {
+	letter-spacing: 1px;
+}

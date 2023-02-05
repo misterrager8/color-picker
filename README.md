@@ -1,14 +1,24 @@
-form with 2 inputs:
-bg color
-font color
+# color-picker
+---
 
-update in real time w/ jquery
+### About
 
-box below that renders results:
-"Aa"
+Minimalist color picker and mixer. Helps with quickly creating and texting color schemes for whatever purpose.
 
-jquery:
-$('#bg').css('background-color', $('#bg-input').val())
-$('#font').css('background-color', $('#font-input').val())
+### Screenshot
 
-copy hash values to clipboard
+![screenshot1](/docs/screenshot1.png)
+
+### Built With
+
+- HTML / CSS
+- Vanilla JavaScript / JQuery
+- Bootstrap
+
+### Author
+
+[C.N. Joseph (misterrager8)](https://github.com/misterrager8/)
+
+### License
+
+MIT License
