@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/color-picker/static/css/main.481c56d7.css",
+    "main.js": "/color-picker/static/js/main.0872bf43.js",
+    "static/media/bootstrap-icons.woff?": "/color-picker/static/media/bootstrap-icons.449ad8adf6ae0424b7ed.woff",
+    "static/media/bootstrap-icons.woff2?": "/color-picker/static/media/bootstrap-icons.dea24bf5a7646d8b84e7.woff2",
+    "index.html": "/color-picker/index.html",
+    "main.481c56d7.css.map": "/color-picker/static/css/main.481c56d7.css.map",
+    "main.0872bf43.js.map": "/color-picker/static/js/main.0872bf43.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.481c56d7.css",
+    "static/js/main.0872bf43.js"
+  ]
+}
