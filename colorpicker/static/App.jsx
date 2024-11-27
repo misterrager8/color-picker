@@ -244,9 +244,9 @@ function App() {
 
     getName(hex.slice(1)).then((data) => {
       setCurrentColor({
-        hex: hex,
+        hex: textColor,
         rgb: rgb,
-        textColor: textColor,
+        textColor: hex,
         name: (data.paletteTitle || "").toLowerCase().split(" ").join("-"),
       });
       setLoading(false);
@@ -276,9 +276,9 @@ function App() {
   };
 
   const copyable = (name, hex, textColor) => `
-  html[data-theme="${name}"] {
+  html[data-theme="${name}-${hex === "#1a1a1a" ? "dark" : "light"}"] {
     --primary-bg: ${hex};
-    --primary-txt: ${textColor};
+    --primary-txt: ${hex === "#1a1a1a" ? "#cccccc" : "#1a1a1a"};
     --btn-color: ${textColor};
     --btn-hover-text: ${hex};
   }`;
@@ -400,7 +400,13 @@ function App() {
                             onClick={() => {
                               let copyables = [];
                               for (let x = 0; x < themes.length; x++) {
-                                copyables.push(`"${themes[x].name}"`);
+                                copyables.push(
+                                  `"${themes[x].name}-${
+                                    themes[x].hex === "#1a1a1a"
+                                      ? "dark"
+                                      : "light"
+                                  }"`
+                                );
                               }
                               navigator.clipboard.writeText(
                                 copyables.join(",")
