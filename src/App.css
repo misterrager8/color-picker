@@ -1,0 +1,70 @@
+:root,
+html[data-theme="light"] {
+  --primary-bg: #cccccc;
+  --primary-txt: #1a1a1a;
+  --button-color: #1a1a1a;
+  --button-hover-txt: #cccccc;
+}
+
+html[data-theme="dark"] {
+  --primary-bg: #1a1a1a;
+  --primary-txt: #cccccc;
+  --button-color: #cccccc;
+  --button-hover-txt: #1a1a1a;
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--primary-txt);
+}
+
+.btn {
+  background-color: transparent;
+  color: var(--button-color);
+  border-color: var(--button-color);
+}
+
+.btn:hover {
+  background-color: var(--button-color);
+  color: var(--button-hover-txt);
+}
+
+.form-control,
+.form-control:focus {
+  background-color: var(--primary-bg);
+  color: var(--primary-txt);
+}
+
+a,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+.between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.full {
+  height: 100vh;
+}
+
+.color-item {
+  width: 20%;
+  display: flex;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 300px) {
+  .d-flex {
+    display: unset !important;
+    height: 100%;
+  }
+
+  .color-item {
+    height: 145px !important;
+    width: 100% !important;
+  }
+}
