@@ -1,6 +1,7 @@
 {
   "name": "color-picker",
   "version": "0.1.0",
+  "homepage": "https://misterrager8.github.io/color-picker/",
   "private": true,
   "dependencies": {
     "bootstrap": "^5.3.3",
