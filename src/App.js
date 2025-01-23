@@ -32,7 +32,7 @@ function App() {
   const [colors, setColors] = useState([]);
 
   const getColors = () => {
-    fetch("http://colormind.io/api/", {
+    fetch("https://colormind.io/api/", {
       method: "POST",
       headers: {},
       body: JSON.stringify({
