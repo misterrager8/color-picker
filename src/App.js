@@ -32,42 +32,34 @@ function App() {
   const [colors, setColors] = useState([]);
 
   const getColors = () => {
-    fetch("https://colormind.io/api/", {
-      method: "POST",
-      headers: {},
-      body: JSON.stringify({
-        model: "default",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setColors(data.result);
+    let colors_ = [];
 
-        let colors_ = [];
-        for (let x = 0; x < data.result.length; x++) {
-          let r_hex = data.result[x][0].toString(16);
-          let g_hex = data.result[x][1].toString(16);
-          let b_hex = data.result[x][2].toString(16);
-          let hex = `#${r_hex}${g_hex}${b_hex}`.toLocaleUpperCase();
+    for (let x = 1; x <= 5; x++) {
+      let r_int = Math.round(Math.random() * 255);
+      let r_hex = r_int.toString(16);
 
-          let brightness = Math.round(
-            ((data.result[x][0] * 212.6 +
-              data.result[x][1] * 715.2 +
-              data.result[x][2] * 72.2) /
-              1000 /
-              255) *
-              100
-          );
-          let textColor = brightness > 40 ? "#1a1a1a" : "#cccccc";
+      let g_int = Math.round(Math.random() * 255);
+      let g_hex = g_int.toString(16);
 
-          colors_.push({
-            hex: hex,
-            rgb: `${data.result[x][0]}, ${data.result[x][1]}, ${data.result[x][2]}`,
-            textColor: textColor,
-          });
-        }
-        setColors(colors_);
+      let b_int = Math.round(Math.random() * 255);
+      let b_hex = b_int.toString(16);
+
+      let hex = `#${r_hex}${g_hex}${b_hex}`.toLocaleUpperCase();
+      let rgb = `${r_int}, ${g_int}, ${b_int}`;
+      let brightness = Math.round(
+        ((r_int * 212.6 + g_int * 715.2 + b_int * 72.2) / 1000 / 255) * 100
+      );
+
+      let textColor = brightness > 40 ? "#1a1a1a" : "#cccccc";
+
+      colors_.push({
+        hex: hex,
+        rgb: rgb,
+        textColor: textColor,
       });
+    }
+
+    setColors(colors_);
   };
 
   useEffect(() => {
