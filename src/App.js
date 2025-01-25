@@ -6,6 +6,7 @@ const MultiContext = createContext();
 
 function ColorItem({ item, className = "" }) {
   const [copied, setCopied] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const copyHex = () => {
     navigator.clipboard.writeText(item.hex);
@@ -15,14 +16,22 @@ function ColorItem({ item, className = "" }) {
 
   return (
     <div
-      onClick={() => copyHex()}
-      style={{ backgroundColor: item.hex, color: item.textColor }}
+      style={{ backgroundColor: item.textColor }}
       className={className + " color-item"}>
       <div className="m-auto">
-        <div className="h1">{item.hex}</div>
-        <div className="text-center h3">
-          {copied && <i className="bi bi-clipboard-check"></i>}&nbsp;
-        </div>
+        <button
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={() => copyHex()}
+          className="btn btn-lg w-100"
+          style={{
+            backgroundColor: !hovered ? "transparent" : item.hex,
+            color: !hovered ? item.hex : item.textColor,
+            borderColor: !hovered ? item.hex : "transparent",
+          }}>
+          {copied && <i className="bi bi-clipboard-check me-2"></i>}
+          {item.hex}
+        </button>
       </div>
     </div>
   );
