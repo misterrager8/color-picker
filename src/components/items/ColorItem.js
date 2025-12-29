@@ -26,8 +26,8 @@ export default function ColorItem({ item }) {
                 display: "flex",
                 width: "25px",
                 height: "25px",
-                backgroundColor: item.textColor,
-                color: item.primary,
+                backgroundColor: item.primary,
+                color: item.textColor,
                 borderRadius: "7px",
               }}>
               <span className="m-auto">ABC</span>
