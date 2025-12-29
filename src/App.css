@@ -42,29 +42,43 @@ a:hover {
   text-decoration: none;
 }
 
-.between {
-  display: flex;
-  justify-content: space-between;
-}
-
-.full {
-  height: 100vh;
-}
-
-.color-item {
-  width: 20%;
-  display: flex;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 300px) {
+/* @media screen and (max-width: 700px) {
   .d-flex {
     display: unset !important;
     height: 100%;
   }
 
   .color-item {
-    height: 145px !important;
+    height: 20vh !important;
     width: 100% !important;
   }
+} */
+
+.shade {
+  height: 10.67vh;
+  display: flex;
+  cursor: pointer;
+}
+
+.top {
+  height: 4vh;
+  display: flex;
+  padding-left: 1px;
+}
+
+.vh-90 {
+  height: 96vh;
+}
+
+.btn-group-vertical > .btn:hover {
+  background-color: unset;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1a1a1a;
 }
