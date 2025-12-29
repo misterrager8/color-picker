@@ -21,11 +21,11 @@ export default function ColorItem({ item }) {
         className="color-inner">
         <div className="m-auto">
           <div className="text-center">
-            <div
+            <div className="mb-4"
               style={{
                 display: "flex",
-                width: "25px",
-                height: "25px",
+                width: "75px",
+                height: "75px",
                 backgroundColor: item.primary,
                 color: item.textColor,
                 borderRadius: "7px",
