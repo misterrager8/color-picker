@@ -1,16 +1,18 @@
 :root,
 html[data-theme="light"] {
-  --primary-bg: #cccccc;
+  --primary-bg: hsl(30 49 80);
   --primary-txt: #1a1a1a;
-  --button-color: #1a1a1a;
-  --button-hover-txt: #cccccc;
+
+  --btn-color: hsl(349 79 29);
+  --btn-hover-txt: #cccccc;
 }
 
 html[data-theme="dark"] {
-  --primary-bg: #1a1a1a;
+  --primary-bg:  hsl(29 16 10);
   --primary-txt: #cccccc;
-  --button-color: #cccccc;
-  --button-hover-txt: #1a1a1a;
+
+  --btn-color: hsl(26 69 53);
+  --btn-hover-txt: #1a1a1a;
 }
 
 body {
@@ -18,67 +20,90 @@ body {
   color: var(--primary-txt);
 }
 
-.btn {
-  background-color: transparent;
-  color: var(--button-color);
-  border-color: var(--button-color);
-}
-
-.btn:hover {
-  background-color: var(--button-color);
-  color: var(--button-hover-txt);
-}
-
-.form-control,
-.form-control:focus {
-  background-color: var(--primary-bg);
-  color: var(--primary-txt);
-}
-
 a,
 a:hover {
-  cursor: pointer;
   color: inherit;
   text-decoration: none;
-}
-
-/* @media screen and (max-width: 700px) {
-  .d-flex {
-    display: unset !important;
-    height: 100%;
-  }
-
-  .color-item {
-    height: 20vh !important;
-    width: 100% !important;
-  }
-} */
-
-.shade {
-  height: 10.67vh;
-  display: flex;
   cursor: pointer;
 }
 
-.top {
-  height: 4vh;
+.body {
+  height: 100vh;
   display: flex;
-  padding-left: 1px;
 }
 
-.vh-90 {
-  height: 96vh;
+.inner {
+  height: 99%;
+  width: 99%;
+  margin: auto;
+  /* border: 0.5px solid red; */
 }
 
-.btn-group-vertical > .btn:hover {
-  background-color: unset;
+.btn-custom {
+  color: var(--btn-color);
+  border: 1px solid var(--btn-color);
+  background-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  transition: background-color 0.25s;
+  padding: 2.5px 10px;
+  font-size: 0.875rem;
+  margin: 1px;
 }
 
-::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+.btn-custom:hover,
+.btn-custom.active {
+  background-color: var(--btn-color);
+  color: var(--btn-hover-txt);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #1a1a1a;
+.nav {
+  height: 5%;
+  display: flex;
+  /* border: 0.5px solid red; */
+  justify-content: space-between;
+}
+
+.nav > div {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.color-panel {
+  /* border: 0.5px solid red; */
+  height: 95%;
+  display: flex;
+}
+
+.color {
+  width: 20%;
+  height: 100%;
+  /* border: 0.5px solid red; */
+  display: flex;
+  background-color: var(--primary-bg);
+}
+
+.color-inner {
+  margin: auto;
+  height: 100%;
+  width: 98%;
+  border-radius: 10px;
+  display: flex;
+}
+
+@media screen and (max-width: 1050px) {
+  .color-panel {
+    flex-direction: column;
+  }
+
+  .color {
+    width: 100%;
+    height: 20%;
+  }
+
+  .color-inner {
+    height: 98%;
+    width: 100%;
+  }
 }

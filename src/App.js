@@ -1,174 +1,53 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+import { createContext, useEffect, useState } from "react";
 import "./App.css";
-import Button from "./Button";
+import Button from "./components/atoms/Button";
+import ColorItem from "./components/items/ColorItem";
 
-const MultiContext = createContext();
-const ShadeContext = createContext();
-
-function ShadeItem({ item }) {
-  const shadeCtx = useContext(ShadeContext);
-  const [copied, setCopied] = useState(false);
-
-  const copyHSL = () => {
-    navigator.clipboard.writeText(item.formatted);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
-  };
-
-  return (
-    <div
-      onMouseEnter={() => shadeCtx.setHovered(item)}
-      onMouseLeave={() => shadeCtx.setHovered(null)}
-      onClick={() => {
-        if (item.l === shadeCtx.base.l) {
-          shadeCtx.setShowShades(false);
-        } else {
-          copyHSL();
-        }
-      }}
-      className={"shade d-flex"}
-      style={{ backgroundColor: item.formatted, color: item.textColor }}>
-      <div className="m-auto text-center">
-        {shadeCtx.hovered?.formatted === item.formatted && (
-          <>
-            {copied ? (
-              <i className="bi bi-check-lg"></i>
-            ) : (
-              <span className="small opacity-75">{item.l}</span>
-            )}
-          </>
-        )}
-        {item.l === shadeCtx.base.l &&
-          shadeCtx.hovered?.formatted !== item.formatted && (
-            <i className="bi bi-record-fill"></i>
-          )}
-      </div>
-    </div>
-  );
-}
-
-function ColorItem({ item }) {
-  const multiCtx = useContext(MultiContext);
-
-  const [copied, setCopied] = useState(false);
-  const [showShades, setShowShades] = useState(false);
-  const [reversed, setReversed] = useState(false);
-  const [hovered, setHovered] = useState(null);
-
-  const copyHSL = () => {
-    navigator.clipboard.writeText(item.formatted);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
-  };
-
-  useEffect(() => {
-    setReversed(multiCtx.reverseAll);
-  }, [multiCtx.reverseAll]);
-
-  useEffect(() => {
-    setShowShades(multiCtx.showAllShades);
-  }, [multiCtx.showAllShades]);
-
-  const contextValue = {
-    hovered: hovered,
-    setHovered: setHovered,
-    setShowShades: setShowShades,
-    base: item,
-  };
-
-  return (
-    <div className="col p-0">
-      {!showShades ? (
-        <div
-          className="vh-90 d-flex"
-          style={{
-            backgroundColor: reversed ? item.textColor : item.formatted,
-            color: reversed ? item.formatted : item.textColor,
-          }}>
-          <div className="btn-group-vertical m-auto">
-            <button
-              onClick={() => setShowShades(true)}
-              className="btn btn-lg border-0"
-              style={{
-                color: reversed ? item.formatted : item.textColor,
-              }}>
-              <i className="bi bi-sunglasses"></i>
-            </button>
-            <button
-              onClick={() => copyHSL()}
-              className="btn btn-lg border-0"
-              style={{
-                color: reversed ? item.formatted : item.textColor,
-              }}>
-              <i className={"bi bi-" + (copied ? "check-lg" : "copy")}></i>
-            </button>
-            <button
-              onClick={() => setReversed(!reversed)}
-              className="btn btn-lg border-0"
-              style={{
-                color: reversed ? item.formatted : item.textColor,
-              }}>
-              <i className={"bi bi-toggle-" + (reversed ? "on" : "off")}></i>
-            </button>
-            <span className="mt-4 small opacity-75">
-              {item.h}, {item.s}, {item.l}
-            </span>
-          </div>
-        </div>
-      ) : (
-        <ShadeContext.Provider value={contextValue}>
-          {item.shades.map((y) => (
-            <ShadeItem item={y} />
-          ))}
-        </ShadeContext.Provider>
-      )}
-    </div>
-  );
-}
+export const MultiContext = createContext();
 
 function App() {
-  const [reverseAll, setReverseAll] = useState(false);
-  const [showAllShades, setShowAllShades] = useState(false);
-  const [limit, setLimit] = useState(5);
   const [colors, setColors] = useState([]);
+  const [reversed, setReversed] = useState(false);
+  const [theme, setTheme] = useState(
+    localStorage.getItem("color-picker-theme") || "light"
+  );
 
-  const hslToString = (h, s, l) => {
-    return `hsl(${h}, ${s}%, ${l}%)`;
-  };
+  const [scheme, setScheme] = useState("both");
 
-  const getTextColor = (brightness) =>
-    brightness > 49 ? "#1a1a1a" : "#cccccc";
+  function getRandomArbitrary(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
 
   const getColors = () => {
     let colors_ = [];
-    for (let x = 1; x <= limit; x++) {
-      let h = Math.round(Math.random() * 360);
-      let s = Math.round(Math.random() * 100);
-      let l = Math.round(Math.random() * (9 - 1) + 1) * 10;
+    for (let x = 1; x <= 5; x++) {
+      let h = Math.round(Math.random() * 359);
+      let s = Math.round(Math.random() * 90);
+      let l = getRandomArbitrary(
+        scheme === "light" ? 20 : scheme === "dark" ? 41 : 20,
+        scheme === "light" ? 40 : scheme === "dark" ? 80 : 80
+      );
 
-      let shades = [];
+      let h2 = Math.round(Math.random() * 359);
+      let s2 = Math.round(Math.random() * 90);
+      let l2 = getRandomArbitrary(
+        scheme === "light" ? 20 : 41,
+        scheme === "light" ? 40 : 80
+      );
 
-      for (let y = 1; y <= 9; y++) {
-        let newH = h;
-        let newS = s;
-        let newL = y * 10;
-
-        shades.push({
-          h: newH,
-          s: newS,
-          l: newL,
-          formatted: hslToString(newH, newS, newL),
-          textColor: getTextColor(newL),
-        });
-      }
+      let primary = `hsl(${h} ${s} ${l})`;
+      let secondary = `hsl(${h2} ${s2} ${l})`;
+      // let textColor = l < 41 ? "#cccccc" : "#1a1a1a";
+      let textColor = `hsl(${h2} ${s2} ${l < 41 ? 80 : 10})`;
 
       colors_.push({
-        h: h,
-        s: s,
-        l: l,
-        formatted: hslToString(h, s, l),
-        textColor: getTextColor(l),
-        shades: shades.sort((x, y) => y.l - x.l),
+        primary: primary,
+        secondary: secondary,
+        textColor: textColor,
       });
     }
 
@@ -177,44 +56,61 @@ function App() {
 
   useEffect(() => {
     getColors();
-  }, []);
+  }, [scheme]);
+
+  useEffect(() => {
+    localStorage.setItem("color-picker-theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const contextValue = {
-    reverseAll: reverseAll,
-    setReverseAll: setReverseAll,
-    showAllShades: showAllShades,
-    setShowAllShades: setShowAllShades,
+    reversed: reversed,
   };
 
   return (
     <MultiContext.Provider value={contextValue}>
-      <div className="">
-        <div className="top">
-          <div className="btn-group btn-group-sm my-auto">
-            <Button
-              text="Generate"
-              border={false}
-              icon="shuffle"
-              onClick={() => getColors()}
-            />
-            <Button
-              onClick={() => setReverseAll(!reverseAll)}
-              text="Reverse All"
-              border={false}
-              icon="repeat"
-            />
-            <Button
-              onClick={() => setShowAllShades(!showAllShades)}
-              text="Show All Shades"
-              border={false}
-              icon="sunglasses"
-            />
+      <div className="body">
+        <div className="inner">
+          <div className="nav">
+            <div className="d-flex">
+              <Button
+                onClick={() => getColors()}
+                icon="dice-5"
+                text="Generate"
+              />
+              <div className="d-flex">
+                <Button
+                  active={scheme === "light"}
+                  icon="sun-fill"
+                  onClick={() => setScheme("light")}
+                  text="Light"
+                />
+                <Button
+                  active={scheme === "dark"}
+                  icon="moon-fill"
+                  onClick={() => setScheme("dark")}
+                  text="Dark"
+                />
+                <Button
+                  active={scheme === "both"}
+                  icon="record2"
+                  onClick={() => setScheme("both")}
+                  text="Both"
+                />
+              </div>
+            </div>
+            <div>
+              <Button
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                icon={(theme === "light" ? "sun" : "moon") + "-fill"}
+              />
+            </div>
           </div>
-        </div>
-        <div className="row">
-          {colors.map((x) => (
-            <ColorItem item={x} />
-          ))}
+          <div className="color-panel">
+            {colors.map((x) => (
+              <ColorItem item={x} />
+            ))}
+          </div>
         </div>
       </div>
     </MultiContext.Provider>
