@@ -21,6 +21,17 @@ export default function ColorItem({ item }) {
         className="color-inner">
         <div className="m-auto">
           <div className="text-center">
+            <div
+              style={{
+                display: "flex",
+                width: "25px",
+                height: "25px",
+                backgroundColor: item.textColor,
+                color: item.primary,
+                borderRadius: "7px",
+              }}>
+              <span className="m-auto">ABC</span>
+            </div>
             <a onClick={() => copy(item.textColor)}>
               <i className={"bi bi-" + (copied ? "check-lg" : "copy")}></i>
             </a>
