@@ -1,23 +1,29 @@
+import { Icon } from "@iconify/react";
+
 export default function Button({
-  text,
-  icon,
   onClick,
+  style,
+  icon,
+  text,
+  disabled = false,
+  border = false,
+  active = false,
   type_ = "button",
-  active,
-  border = true,
   className = "",
 }) {
   return (
     <button
-      onClick={onClick}
+      style={style}
+      disabled={disabled}
       type={type_}
       className={
         className +
-        "btn-custom" +
+        " btn" +
         (border ? "" : " border-0") +
         (active ? " active" : "")
-      }>
-      {icon && <i className={"bi bi-" + icon + (text ? " me-1" : "")}></i>}
+      }
+      onClick={onClick}>
+      {icon && <Icon inline className={text ? "me-2" : ""} icon={icon} />}
       {text && <span>{text}</span>}
     </button>
   );
