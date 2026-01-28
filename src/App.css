@@ -124,6 +124,19 @@ body {
   height: 7.5vh;
 }
 
+.form-control,
+.form-control:focus {
+  background-color: transparent;
+  color: inherit;
+  border: 0.5px solid;
+  font-size: 0.9rem;
+}
+
+::placeholder {
+  color: inherit !important;
+  opacity: 50% !important;
+}
+
 @media screen and (max-width: 1050px) {
   .inner {
     flex-direction: column;

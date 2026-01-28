@@ -6,12 +6,17 @@ export default function Context({ children }) {
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(5);
   const [colors, setColors] = useState([]);
-  const [reverseAll, setReverseAll] = useState(false);
-  const [currentPage, setCurrentPage] = useState("generator");
+  const [reverseAll, setReverseAll] = useState(
+    localStorage.getItem("reversed") || false,
+  );
+  const [currentPage, setCurrentPage] = useState(
+    localStorage.getItem("tints-last-page") || "generator",
+  );
   const [savedColors, setSavedColors] = useState(
     JSON.parse(localStorage.getItem("saved-colors")) || [],
   );
   const [currentColor, setCurrentColor] = useState(null);
+  const [sort, setSort] = useState("hue");
 
   const addColor = (color) => {
     let colors_ = [...savedColors];
@@ -31,8 +36,8 @@ export default function Context({ children }) {
     setSavedColors(colors_);
   };
 
-  const deleteColor = (id) => {
-    let colors_ = [...savedColors].filter((x) => x.id !== id);
+  const deleteColor = () => {
+    let colors_ = [...savedColors].filter((x) => x.id !== currentColor?.id);
     setSavedColors(colors_);
     setCurrentColor(null);
   };
@@ -42,9 +47,27 @@ export default function Context({ children }) {
     setCurrentColor(null);
   };
 
+  const renameColor = (e, newName) => {
+    e.preventDefault();
+    let colors_ = [...savedColors];
+    let color_ = colors_.find((x) => x.id === currentColor?.id);
+
+    color_.name = newName;
+    setSavedColors(colors_);
+    setCurrentColor(color_);
+  };
+
   useEffect(() => {
     localStorage.setItem("saved-colors", JSON.stringify(savedColors));
   }, [savedColors]);
+
+  useEffect(() => {
+    localStorage.setItem("reversed", reverseAll);
+  }, [reverseAll]);
+
+  useEffect(() => {
+    localStorage.setItem("tints-last-page", currentPage);
+  }, [currentPage]);
 
   const contextValue = {
     loading: loading,
@@ -65,6 +88,9 @@ export default function Context({ children }) {
     deleteAllColors: deleteAllColors,
     currentColor: currentColor,
     setCurrentColor: setCurrentColor,
+    renameColor: renameColor,
+    sort: sort,
+    setSort: setSort,
   };
 
   return (

@@ -4,15 +4,20 @@ import SavedColorItem from "../items/SavedColorItem";
 import Button from "../atoms/Button";
 import Dropdown from "../atoms/Dropdown";
 import { v4 as uuidv4 } from "uuid";
+import Input from "../atoms/Input";
 
 export default function Saved() {
   const multiCtx = useContext(MultiContext);
   const [deletingAll, setDeletingAll] = useState(false);
-  const [sort, setSort] = useState("hue");
   const [filter, setFilter] = useState(null);
   const [copiedHex, setCopiedHex] = useState(false);
   const [copiedTheme, setCopiedTheme] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const [colorName, setColorName] = useState("");
+  const onChangeColorName = (e) => setColorName(e.target.value);
+
+  const [saved, setSaved] = useState(false);
 
   const sorts = [
     {
@@ -81,6 +86,7 @@ export default function Saved() {
 
   useEffect(() => {
     setDeleting(false);
+    setColorName(multiCtx.currentColor?.name || "");
   }, [multiCtx.currentColor]);
 
   useEffect(() => {
@@ -95,18 +101,24 @@ export default function Saved() {
             <Dropdown
               target="sorts"
               icon="bi:filter-right"
-              text={sorts.find((x) => x.value === sort)?.label}>
+              text={sorts.find((x) => x.value === multiCtx.sort)?.label}>
               {sorts.map((x) => (
                 <a
                   key={uuidv4()}
-                  onClick={() => setSort(x.value)}
+                  onClick={() => multiCtx.setSort(x.value)}
                   className={
-                    "dropdown-item" + (x.value === sort ? " active" : "")
+                    "dropdown-item" +
+                    (x.value === multiCtx.sort ? " active" : "")
                   }>
                   {x.label}
                 </a>
               ))}
             </Dropdown>
+            <Button
+              active={multiCtx.reverseAll}
+              icon="picon:switch"
+              onClick={() => multiCtx.setReverseAll(!multiCtx.reverseAll)}
+            />
             <Button
               icon="ri:sun-fill"
               onClick={() => setFilter("light")}
@@ -150,9 +162,9 @@ export default function Saved() {
               }
             })
             .sort((v, w) => {
-              if (sort === "hue") {
+              if (multiCtx.sort === "hue") {
                 return v.hslValues?.hue - w.hslValues?.hue;
-              } else if (sort === "saturation") {
+              } else if (multiCtx.sort === "saturation") {
                 return v.hslValues?.saturation - w.hslValues?.saturation;
               } else {
                 return v.hslValues?.lightness - w.hslValues?.lightness;
@@ -167,8 +179,12 @@ export default function Saved() {
           style={{
             height: "85vh",
             overflowY: "auto",
-            backgroundColor: multiCtx.currentColor?.hexCode,
-            color: multiCtx.currentColor?.textColor,
+            backgroundColor: multiCtx.reverseAll
+              ? multiCtx.currentColor?.textColor
+              : multiCtx.currentColor?.hexCode,
+            color: multiCtx.reverseAll
+              ? multiCtx.currentColor?.hexCode
+              : multiCtx.currentColor?.textColor,
           }}>
           <div className="m-auto">
             {multiCtx.currentColor ? (
@@ -180,15 +196,33 @@ export default function Saved() {
                 }}>
                 <div className="text-center">
                   <div>{multiCtx.currentColor?.hexCode}</div>
-                  <div>"{classifyHue()}-ish"</div>
+                  <div>
+                    {multiCtx.currentColor?.name
+                      ? multiCtx.currentColor?.name
+                      : `"${classifyHue()}-ish"`}
+                  </div>
+                  <form
+                    className="my-3"
+                    onSubmit={(e) => {
+                      multiCtx.renameColor(e, colorName);
+                      setSaved(true);
+                      setTimeout(() => setSaved(false), 250);
+                    }}>
+                    <Input
+                      required
+                      placeholder="Color Name"
+                      value={colorName}
+                      onChange={onChangeColorName}
+                    />
+                  </form>
                   <div>
                     <Button
-                      style={{ color: multiCtx.currentColor?.textColor }}
+                      style={{ color: "inherit" }}
                       onClick={() => multiCtx.setCurrentColor(null)}
                       icon="dashicons:exit"
                     />
                     <Button
-                      style={{ color: multiCtx.currentColor?.textColor }}
+                      style={{ color: "inherit" }}
                       onClick={() => {
                         navigator.clipboard
                           .writeText(`html[data-theme="${multiCtx.currentColor?.textColor === "#1a1a1a" ? "dark" : "light"}-${classifyHue()}"] {
@@ -203,21 +237,19 @@ export default function Saved() {
                       icon={copiedTheme ? "bi:check-lg" : "nonicons:css-16"}
                     />
                     <Button
-                      style={{ color: multiCtx.currentColor?.textColor }}
+                      style={{ color: "inherit" }}
                       onClick={() => copyColor()}
                       icon={copiedHex ? "bi:check-lg" : "ph:hash-bold"}
                     />
                     {deleting && (
                       <Button
-                        style={{ color: multiCtx.currentColor?.textColor }}
-                        onClick={() =>
-                          multiCtx.deleteColor(multiCtx.currentColor?.id)
-                        }
+                        style={{ color: "inherit" }}
+                        onClick={() => multiCtx.deleteColor()}
                         icon="bi:question-lg"
                       />
                     )}
                     <Button
-                      style={{ color: multiCtx.currentColor?.textColor }}
+                      style={{ color: "inherit" }}
                       onClick={() => setDeleting(!deleting)}
                       icon="bi:x-lg"
                     />

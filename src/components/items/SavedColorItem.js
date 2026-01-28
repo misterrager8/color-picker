@@ -32,8 +32,8 @@ export default function SavedColorItem({ item }) {
         onMouseLeave={() => setHovered(false)}
         className="d-flex h-100 p-3"
         style={{
-          backgroundColor: item.hexCode,
-          color: item.textColor,
+          backgroundColor: multiCtx.reverseAll ? item.textColor : item.hexCode,
+          color: multiCtx.reverseAll ? item.hexCode : item.textColor,
         }}>
         <div className="between w-100">
           <span
@@ -46,27 +46,17 @@ export default function SavedColorItem({ item }) {
                 item.textColor === "#1a1a1a" ? "solar:moon-bold" : "ri:sun-fill"
               }
             />
-            <span className="text-truncate">{item.hexCode}</span>
-          </span>
-          {/* <div className={"d-flex m-auto " + (hovered ? "" : "invisible")}>
-            <Button
-              style={{ color: item.textColor }}
-              onClick={() => copyColor()}
-              icon={copied ? "bi:check-lg" : "bi:copy"}
-            />
-            {deleting && (
-              <Button
-                style={{ color: item.textColor }}
-                onClick={() => multiCtx.deleteColor(item.id)}
-                icon="bi:question-lg"
-              />
+            {item.name && (
+              <Icon className="me-2" inline icon="qlementine-icons:rename-16" />
             )}
-            <Button
-              style={{ color: item.textColor }}
-              onClick={() => setDeleting(!deleting)}
-              icon="bi:x-lg"
-            />
-          </div> */}
+            <span className="text-truncate">
+              {multiCtx.sort === "hue"
+                ? item.hslValues?.hue
+                : multiCtx.sort === "saturation"
+                  ? item.hslValues?.saturation
+                  : item.hslValues?.lightness}
+            </span>
+          </span>
         </div>
       </div>
     </div>
