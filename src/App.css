@@ -1,8 +1,15 @@
+@import "./colors.css";
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--primary-txt);
+}
+
 .btn {
   background-color: transparent;
-  border: 0.5px solid #161a1d;
-  color: #161a1d;
-  font-size: 1.1rem;
+  border: 0.5px solid var(--btn-color);
+  color: var(--btn-color);
+  font-size: 0.9rem;
   letter-spacing: 1.5px;
 }
 
@@ -10,8 +17,8 @@
 .btn.active,
 .dropdown-item.active,
 .dropdown-item:hover {
-  background-color: #161a1d;
-  color: #cccccc;
+  background-color: var(--btn-color);
+  color: var(--btn-hover-txt);
 }
 
 .btn:disabled {
@@ -34,14 +41,14 @@
 }
 
 .dropdown-menu {
-  background-color: white;
+  background-color: var(--primary-bg);
   padding: 2px;
   border-radius: 2px;
 }
 
 .dropdown-item {
   letter-spacing: 1.5px;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   cursor: pointer;
   border-radius: 2px;
   /* margin: 2px; */
@@ -55,7 +62,7 @@
 
 .nav-custom {
   height: 7.5vh;
-  border-bottom: 0.5px solid;
+  border-bottom: 0.5px solid var(--btn-color);
   display: flex;
   /* padding: 0px; */
 }
@@ -65,7 +72,7 @@
 }
 
 .inner {
-  height: 92.5vh;
+  height: 85vh;
   display: flex;
 }
 
@@ -90,7 +97,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #35643d;
+  background-color: var(--btn-color);
 }
 
 .btn-flex {
@@ -108,6 +115,13 @@
 .between {
   display: flex;
   justify-content: space-between;
+}
+
+.nav-custom-1 {
+  right: 0;
+  position: absolute;
+  display: flex;
+  height: 7.5vh;
 }
 
 @media screen and (max-width: 1050px) {

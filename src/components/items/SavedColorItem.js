@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { MultiContext } from "../../Context";
 import Button from "../atoms/Button";
 import { Icon } from "@iconify/react";
@@ -7,9 +7,6 @@ export default function SavedColorItem({ item }) {
   const multiCtx = useContext(MultiContext);
   const [hovered, setHovered] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [reversed, setReversed] = useState(false);
-  const [showShades, setShowShades] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const copyColor = () => {
@@ -19,7 +16,17 @@ export default function SavedColorItem({ item }) {
   };
 
   return (
-    <div className="col-2 p-0">
+    <div
+      className={
+        "col-md-2 p-0" +
+        (multiCtx.currentColor?.id === item.id ? " opacity-25" : "")
+      }
+      style={{ cursor: "pointer" }}
+      onClick={() =>
+        multiCtx.setCurrentColor(
+          multiCtx.currentColor?.id === item.id ? null : item,
+        )
+      }>
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -27,18 +34,25 @@ export default function SavedColorItem({ item }) {
         style={{
           backgroundColor: item.hexCode,
           color: item.textColor,
-          // backgroundColor: item.textColor,
-          // color: item.hexCode,
         }}>
         <div className="between w-100">
-          <span className="color-label my-auto">{item.hexCode}</span>
-          <div
-            style={{ color: item.textColor }}
-            className={"my-auto " + (hovered ? "" : "invisible")}>
+          <span
+            className="m-auto color-label text-truncate"
+            title={item.hexCode}>
+            <Icon
+              className="me-2"
+              inline
+              icon={
+                item.textColor === "#1a1a1a" ? "solar:moon-bold" : "ri:sun-fill"
+              }
+            />
+            <span className="text-truncate">{item.hexCode}</span>
+          </span>
+          {/* <div className={"d-flex m-auto " + (hovered ? "" : "invisible")}>
             <Button
               style={{ color: item.textColor }}
               onClick={() => copyColor()}
-              icon={copied ? "bi:check-lg" : "bi:clipboard"}
+              icon={copied ? "bi:check-lg" : "bi:copy"}
             />
             {deleting && (
               <Button
@@ -52,7 +66,7 @@ export default function SavedColorItem({ item }) {
               onClick={() => setDeleting(!deleting)}
               icon="bi:x-lg"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

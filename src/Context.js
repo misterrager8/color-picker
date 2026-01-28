@@ -11,6 +11,7 @@ export default function Context({ children }) {
   const [savedColors, setSavedColors] = useState(
     JSON.parse(localStorage.getItem("saved-colors")) || [],
   );
+  const [currentColor, setCurrentColor] = useState(null);
 
   const addColor = (color) => {
     let colors_ = [...savedColors];
@@ -33,10 +34,12 @@ export default function Context({ children }) {
   const deleteColor = (id) => {
     let colors_ = [...savedColors].filter((x) => x.id !== id);
     setSavedColors(colors_);
+    setCurrentColor(null);
   };
 
   const deleteAllColors = () => {
     setSavedColors([]);
+    setCurrentColor(null);
   };
 
   useEffect(() => {
@@ -60,6 +63,8 @@ export default function Context({ children }) {
     addColor: addColor,
     deleteColor: deleteColor,
     deleteAllColors: deleteAllColors,
+    currentColor: currentColor,
+    setCurrentColor: setCurrentColor,
   };
 
   return (
