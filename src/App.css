@@ -62,7 +62,7 @@ body {
 
 .nav-custom {
   height: 7.5vh;
-  border-bottom: 0.5px solid var(--btn-color);
+  border-bottom: 0.5px solid var(--secondary-color);
   display: flex;
   /* padding: 0px; */
 }
@@ -79,13 +79,16 @@ body {
 .color-item {
   flex: 1;
   display: flex;
-  /* padding: 20px; */
   flex-direction: column;
   justify-content: space-between;
 }
 
+.saved-theme-item {
+  flex: 1;
+  display: flex;
+}
+
 .color-label {
-  /* font-size: 2rem; */
   font-weight: bold;
   text-align: center;
 }
@@ -115,13 +118,6 @@ body {
 .between {
   display: flex;
   justify-content: space-between;
-}
-
-.nav-custom-1 {
-  right: 0;
-  position: absolute;
-  display: flex;
-  height: 7.5vh;
 }
 
 .form-control,

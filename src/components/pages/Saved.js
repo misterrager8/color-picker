@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { MultiContext } from "../../Context";
-import SavedColorItem from "../items/SavedColorItem";
+import SavedThemeItem from "../items/SavedThemeItem";
 import Button from "../atoms/Button";
 import Dropdown from "../atoms/Dropdown";
 import { v4 as uuidv4 } from "uuid";
@@ -10,12 +10,11 @@ export default function Saved() {
   const multiCtx = useContext(MultiContext);
   const [deletingAll, setDeletingAll] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [copiedHex, setCopiedHex] = useState(false);
-  const [copiedTheme, setCopiedTheme] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const [colorName, setColorName] = useState("");
-  const onChangeColorName = (e) => setColorName(e.target.value);
+  const [themeName, setThemeName] = useState("");
+  const onChangeThemeName = (e) => setThemeName(e.target.value);
 
   const [saved, setSaved] = useState(false);
 
@@ -32,52 +31,16 @@ export default function Saved() {
       label: "Lightness",
       value: "lightness",
     },
+    {
+      label: "Name",
+      value: "name",
+    },
   ];
 
-  const copyColor = () => {
-    navigator.clipboard.writeText(multiCtx.currentColor?.hexCode?.slice(1));
-    setCopiedHex(true);
-    setTimeout(() => setCopiedHex(false), 1000);
-  };
-
-  const classifyHue = () => {
-    if (
-      multiCtx.currentColor?.hslValues?.hue <= 15 ||
-      (multiCtx.currentColor?.hslValues?.hue >= 345 &&
-        multiCtx.currentColor?.hslValues?.hue <= 360)
-    ) {
-      return "red";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 16 &&
-      multiCtx.currentColor?.hslValues?.hue <= 45
-    ) {
-      return "orange";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 46 &&
-      multiCtx.currentColor?.hslValues?.hue <= 75
-    ) {
-      return "yellow";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 76 &&
-      multiCtx.currentColor?.hslValues?.hue <= 150
-    ) {
-      return "green";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 151 &&
-      multiCtx.currentColor?.hslValues?.hue <= 240
-    ) {
-      return "blue";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 241 &&
-      multiCtx.currentColor?.hslValues?.hue <= 270
-    ) {
-      return "indigo";
-    } else if (
-      multiCtx.currentColor?.hslValues?.hue >= 271 &&
-      multiCtx.currentColor?.hslValues?.hue <= 344
-    ) {
-      return "purple";
-    }
+  const copyTheme = () => {
+    navigator.clipboard.writeText(multiCtx.currentTheme?.css);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
   };
 
   useEffect(() => {
@@ -86,17 +49,17 @@ export default function Saved() {
 
   useEffect(() => {
     setDeleting(false);
-    setColorName(multiCtx.currentColor?.name || "");
-  }, [multiCtx.currentColor]);
+    setThemeName(multiCtx.currentTheme?.name || "");
+  }, [multiCtx.currentTheme]);
 
   useEffect(() => {
-    multiCtx.setCurrentColor(null);
+    multiCtx.setCurrentTheme(null);
   }, [filter]);
 
   return (
     <>
       <div className="nav-custom">
-        {multiCtx.savedColors.length > 0 && (
+        {multiCtx.savedThemes.length > 0 && (
           <div className="my-auto">
             <Dropdown
               target="sorts"
@@ -114,11 +77,6 @@ export default function Saved() {
                 </a>
               ))}
             </Dropdown>
-            <Button
-              active={multiCtx.reverseAll}
-              icon="picon:switch"
-              onClick={() => multiCtx.setReverseAll(!multiCtx.reverseAll)}
-            />
             <Button
               icon="ri:sun-fill"
               onClick={() => setFilter("light")}
@@ -141,7 +99,7 @@ export default function Saved() {
             {deletingAll && (
               <Button
                 icon="bi:question-lg"
-                onClick={() => multiCtx.deleteAllColors()}
+                onClick={() => multiCtx.deleteAllThemes()}
               />
             )}
           </div>
@@ -151,27 +109,29 @@ export default function Saved() {
         <div
           className="col-6 row m-0 p-0"
           style={{ height: "85vh", overflowY: "auto" }}>
-          {multiCtx.savedColors
+          {multiCtx.savedThemes
             .filter((u) => {
               if (filter === "light") {
-                return u.textColor === "#cccccc";
+                return u.lightness > 40;
               } else if (filter === "dark") {
-                return u.textColor === "#1a1a1a";
+                return u.lightness < 41;
               } else {
                 return u;
               }
             })
             .sort((v, w) => {
               if (multiCtx.sort === "hue") {
-                return v.hslValues?.hue - w.hslValues?.hue;
+                return v?.hue - w?.hue;
               } else if (multiCtx.sort === "saturation") {
-                return v.hslValues?.saturation - w.hslValues?.saturation;
-              } else {
-                return v.hslValues?.lightness - w.hslValues?.lightness;
+                return v?.saturation - w?.saturation;
+              } else if (multiCtx.sort === "lightness") {
+                return v?.lightness - w?.lightness;
+              } else if (multiCtx.sort === "name") {
+                return v.name.localeCompare(w.name);
               }
             })
             .map((x) => (
-              <SavedColorItem key={x.id} item={x} />
+              <SavedThemeItem key={x.id} item={x} />
             ))}
         </div>
         <div
@@ -179,85 +139,144 @@ export default function Saved() {
           style={{
             height: "85vh",
             overflowY: "auto",
-            backgroundColor: multiCtx.reverseAll
-              ? multiCtx.currentColor?.textColor
-              : multiCtx.currentColor?.hexCode,
-            color: multiCtx.reverseAll
-              ? multiCtx.currentColor?.hexCode
-              : multiCtx.currentColor?.textColor,
+            backgroundColor: multiCtx.currentTheme?.primaryBg,
+            color: multiCtx.currentTheme?.primaryTxt,
           }}>
           <div className="m-auto">
-            {multiCtx.currentColor ? (
-              <div
-                style={{
-                  fontSize: "2rem",
-                  fontWeight: "bold",
-                  // textAlign: "center",
-                }}>
-                <div className="text-center">
-                  <div>{multiCtx.currentColor?.hexCode}</div>
-                  <div>
-                    {multiCtx.currentColor?.name
-                      ? multiCtx.currentColor?.name
-                      : `"${classifyHue()}-ish"`}
+            {multiCtx.currentTheme ? (
+              <div className="text-center">
+                <div style={{ fontSize: "1.1rem" }}>
+                  <div
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
+                    }}
+                    className={
+                      "pb-2 mb-2 fw-bold " +
+                      (multiCtx.currentTheme.name ? "" : "invisible")
+                    }>
+                    "{multiCtx.currentTheme?.name}"
+                    <form
+                      className="my-3"
+                      onSubmit={(e) => {
+                        multiCtx.renameTheme(e, themeName);
+                        setSaved(true);
+                        setTimeout(() => setSaved(false), 250);
+                      }}>
+                      <Input
+                        required
+                        placeholder="Color Name"
+                        value={themeName}
+                        onChange={onChangeThemeName}
+                      />
+                    </form>
                   </div>
-                  <form
-                    className="my-3"
-                    onSubmit={(e) => {
-                      multiCtx.renameColor(e, colorName);
-                      setSaved(true);
-                      setTimeout(() => setSaved(false), 250);
+                  <div
+                    className="pb-2 mb-2"
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
                     }}>
-                    <Input
-                      required
-                      placeholder="Color Name"
-                      value={colorName}
-                      onChange={onChangeColorName}
-                    />
-                  </form>
-                  <div>
-                    <Button
-                      style={{ color: "inherit" }}
-                      onClick={() => multiCtx.setCurrentColor(null)}
-                      icon="dashicons:exit"
-                    />
-                    <Button
-                      style={{ color: "inherit" }}
-                      onClick={() => {
-                        navigator.clipboard
-                          .writeText(`html[data-theme="${multiCtx.currentColor?.textColor === "#1a1a1a" ? "dark" : "light"}-${classifyHue()}"] {
-  --primary-bg: ${multiCtx.currentColor?.textColor};
-  --primary-txt: ${multiCtx.currentColor?.textColor === "#1a1a1a" ? "#cccccc" : "#1a1a1a"};
-  --btn-color: ${multiCtx.currentColor?.hexCode};
-  --btn-hover-txt: ${multiCtx.currentColor?.textColor};
-}`);
-                        setCopiedTheme(true);
-                        setTimeout(() => setCopiedTheme(false), 1000);
-                      }}
-                      icon={copiedTheme ? "bi:check-lg" : "nonicons:css-16"}
-                    />
-                    <Button
-                      style={{ color: "inherit" }}
-                      onClick={() => copyColor()}
-                      icon={copiedHex ? "bi:check-lg" : "ph:hash-bold"}
-                    />
-                    {deleting && (
+                    <div className="fw-bold mb-1">Background Color</div>
+                    <div
+                      style={{
+                        textTransform: "uppercase",
+                        color: multiCtx.currentTheme?.primaryTxt,
+                      }}>
+                      {multiCtx.currentTheme?.primaryBg}
+                    </div>
+                  </div>
+                  <div
+                    className="pb-2 mb-2"
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
+                    }}>
+                    <div className="fw-bold mb-1">Font Color</div>
+                    <div
+                      style={{
+                        textTransform: "uppercase",
+                        color: multiCtx.currentTheme?.primaryTxt,
+                      }}>
+                      {multiCtx.currentTheme?.primaryTxt}
+                    </div>
+                  </div>
+                  <div
+                    className="pb-2 mb-2"
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
+                    }}>
+                    <div className="fw-bold mb-1">Secondary Color</div>
+                    <div
+                      style={{
+                        textTransform: "uppercase",
+                        color: multiCtx.currentTheme?.secondaryColor,
+                      }}>
+                      {multiCtx.currentTheme?.secondaryColor}
+                    </div>
+                  </div>
+                  <div
+                    className="pb-2 mb-2"
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
+                    }}>
+                    <div className="fw-bold mb-1">Button Color</div>
+                    <div
+                      style={{
+                        textTransform: "uppercase",
+                        color: multiCtx.currentTheme?.btnColor,
+                      }}>
+                      {multiCtx.currentTheme?.btnColor}
+                    </div>
+                  </div>
+                  <div
+                    className="pb-2 mb-2"
+                    style={{
+                      borderBottom: `.5px solid ${multiCtx.currentTheme?.secondaryColor}`,
+                    }}>
+                    <div className="fw-bold mb-1">Button Hover Color</div>
+                    <div
+                      style={{
+                        textTransform: "uppercase",
+                        backgroundColor: multiCtx.currentTheme?.btnColor,
+                        color: multiCtx.currentTheme?.btnHoverTxt,
+                        padding: "6px 12px",
+                        borderRadius: "5px",
+                      }}>
+                      {multiCtx.currentTheme?.btnHoverTxt}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex">
+                  <div className="d-flex mx-auto">
+                    <div>
                       <Button
                         style={{ color: "inherit" }}
-                        onClick={() => multiCtx.deleteColor()}
-                        icon="bi:question-lg"
+                        onClick={() => multiCtx.setCurrentTheme(null)}
+                        icon="dashicons:exit"
                       />
-                    )}
+                    </div>
+
+                    <div>
+                      <Button
+                        style={{ color: "inherit" }}
+                        onClick={() => copyTheme()}
+                        icon={copied ? "bi:check-lg" : "bi:copy"}
+                      />
+                    </div>
                     <Button
                       style={{ color: "inherit" }}
                       onClick={() => setDeleting(!deleting)}
                       icon="bi:x-lg"
                     />
+                    <div>
+                      {deleting && (
+                        <Button
+                          style={{ color: "inherit" }}
+                          onClick={() => multiCtx.deleteTheme()}
+                          icon="bi:question-lg"
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-
-                <div style={{ whiteSpace: "pre-wrap", textAlign: "unset" }}>
-                  {}
                 </div>
               </div>
             ) : (

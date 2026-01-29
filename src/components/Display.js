@@ -16,15 +16,17 @@ export default function Display() {
             icon="fa-solid:random"
             onClick={() => multiCtx.setCurrentPage("generator")}
           />
-          <Button
-            active={multiCtx.currentPage === "saved-colors"}
-            text={multiCtx.savedColors.length.toString()}
-            icon="icon-park-solid:save"
-            onClick={() => multiCtx.setCurrentPage("saved-colors")}
-          />
+          {multiCtx.savedThemes.length > 0 && (
+            <Button
+              active={multiCtx.currentPage === "saved-themes"}
+              text={multiCtx.savedThemes.length.toString()}
+              icon="icon-park-solid:save"
+              onClick={() => multiCtx.setCurrentPage("saved-themes")}
+            />
+          )}
         </div>
       </div>
-      {multiCtx.currentPage === "saved-colors" ? (
+      {multiCtx.currentPage === "saved-themes" ? (
         <Saved />
       ) : multiCtx.currentPage === "generator" ? (
         <Generator />

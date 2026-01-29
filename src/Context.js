@@ -5,65 +5,59 @@ export const MultiContext = createContext();
 export default function Context({ children }) {
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(5);
-  const [colors, setColors] = useState([]);
-  const [reverseAll, setReverseAll] = useState(
-    localStorage.getItem("reversed") || false,
-  );
+
+  const [themes, setThemes] = useState([]);
   const [currentPage, setCurrentPage] = useState(
     localStorage.getItem("tints-last-page") || "generator",
   );
-  const [savedColors, setSavedColors] = useState(
-    JSON.parse(localStorage.getItem("saved-colors")) || [],
+  const [savedThemes, setSavedThemes] = useState(
+    JSON.parse(localStorage.getItem("saved-themes")) || [],
   );
-  const [currentColor, setCurrentColor] = useState(null);
+  const [currentTheme, setCurrentTheme] = useState(null);
   const [sort, setSort] = useState("hue");
 
-  const addColor = (color) => {
-    let colors_ = [...savedColors];
-    colors_.push(color);
-    setSavedColors(colors_);
+  const addTheme = (theme) => {
+    let themes_ = [...savedThemes];
+    themes_.push(theme);
+    setSavedThemes(themes_);
   };
 
-  const addColors = (newColors) => {
-    let colors_ = [...savedColors];
-    let colorNames = colors_.map((x) => x.hexCode);
+  const addThemes = (newThemes) => {
+    let themes_ = [...savedThemes];
 
-    for (let x = 0; x < newColors.length; x++) {
-      if (!colorNames.includes(newColors[x]?.hexCode))
-        colors_.push(newColors[x]);
+    for (let x = 0; x < newThemes.length; x++) {
+      if (!themes_.includes(newThemes[x])) {
+        themes_.push(newThemes[x]);
+      }
     }
 
-    setSavedColors(colors_);
+    setSavedThemes(themes_);
   };
 
-  const deleteColor = () => {
-    let colors_ = [...savedColors].filter((x) => x.id !== currentColor?.id);
-    setSavedColors(colors_);
-    setCurrentColor(null);
+  const deleteTheme = () => {
+    let themes_ = [...savedThemes].filter((x) => x.id !== currentTheme?.id);
+    setSavedThemes(themes_);
+    setCurrentTheme(null);
   };
 
-  const deleteAllColors = () => {
-    setSavedColors([]);
-    setCurrentColor(null);
+  const deleteAllThemes = () => {
+    setSavedThemes([]);
+    setCurrentTheme(null);
   };
 
-  const renameColor = (e, newName) => {
+  const renameTheme = (e, newName) => {
     e.preventDefault();
-    let colors_ = [...savedColors];
-    let color_ = colors_.find((x) => x.id === currentColor?.id);
+    let themes_ = [...savedThemes];
+    let theme_ = themes_.find((x) => x.id === currentTheme?.id);
 
-    color_.name = newName;
-    setSavedColors(colors_);
-    setCurrentColor(color_);
+    theme_.name = newName;
+    setSavedThemes(themes_);
+    setCurrentTheme(theme_);
   };
 
   useEffect(() => {
-    localStorage.setItem("saved-colors", JSON.stringify(savedColors));
-  }, [savedColors]);
-
-  useEffect(() => {
-    localStorage.setItem("reversed", reverseAll);
-  }, [reverseAll]);
+    localStorage.setItem("saved-themes", JSON.stringify(savedThemes));
+  }, [savedThemes]);
 
   useEffect(() => {
     localStorage.setItem("tints-last-page", currentPage);
@@ -74,21 +68,19 @@ export default function Context({ children }) {
     setLoading: setLoading,
     limit: limit,
     setLimit: setLimit,
-    colors: colors,
-    setColors: setColors,
-    reverseAll: reverseAll,
-    setReverseAll: setReverseAll,
+    themes: themes,
+    setThemes: setThemes,
     currentPage: currentPage,
     setCurrentPage: setCurrentPage,
-    savedColors: savedColors,
-    setSavedColors: setSavedColors,
-    addColors: addColors,
-    addColor: addColor,
-    deleteColor: deleteColor,
-    deleteAllColors: deleteAllColors,
-    currentColor: currentColor,
-    setCurrentColor: setCurrentColor,
-    renameColor: renameColor,
+    savedThemes: savedThemes,
+    setSavedThemes: setSavedThemes,
+    addThemes: addThemes,
+    addTheme: addTheme,
+    deleteTheme: deleteTheme,
+    deleteAllThemes: deleteAllThemes,
+    currentTheme: currentTheme,
+    setCurrentTheme: setCurrentTheme,
+    renameTheme: renameTheme,
     sort: sort,
     setSort: setSort,
   };

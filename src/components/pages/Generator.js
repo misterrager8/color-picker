@@ -1,13 +1,31 @@
 import { useContext, useEffect, useState } from "react";
 import { MultiContext } from "../../Context";
-import ColorItem from "../items/ColorItem";
 import { v4 as uuidv4 } from "uuid";
 import Button from "../atoms/Button";
+import ThemeItem from "../items/ThemeItem";
 
 export default function Generator() {
   const multiCtx = useContext(MultiContext);
   const [base, setBase] = useState("both");
   const [allSaved, setAllSaved] = useState(false);
+
+  const classifyHue = (hue) => {
+    if (hue <= 15 || (hue >= 345 && hue <= 360)) {
+      return "red";
+    } else if (hue >= 16 && hue <= 45) {
+      return "orange";
+    } else if (hue >= 46 && hue <= 75) {
+      return "yellow";
+    } else if (hue >= 76 && hue <= 150) {
+      return "green";
+    } else if (hue >= 151 && hue <= 240) {
+      return "blue";
+    } else if (hue >= 241 && hue <= 270) {
+      return "indigo";
+    } else if (hue >= 271 && hue <= 344) {
+      return "purple";
+    }
+  };
 
   const hslToHex = (h, s, l) => {
     s /= 100;
@@ -26,53 +44,69 @@ export default function Generator() {
     return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
   };
 
-  const getRandomColor = () => {
-    let shades = [];
+  const getRandomNumber = (min, max) =>
+    Math.round(Math.random() * (max - min) + min);
 
-    let h = Math.round(Math.random() * 359);
-    let s = Math.round(Math.random() * (90 - 10) + 10);
-    let l;
-    if (base === "light") {
-      l = Math.round(Math.random() * (4 - 1) + 1) * 10;
-    } else if (base === "dark") {
-      l = Math.round(Math.random() * (9 - 5) + 5) * 10;
-    } else {
-      l = Math.round(Math.random() * (9 - 1) + 1) * 10;
-    }
+  const getRandomTheme = () => {
+    let hue = getRandomNumber(1, 359);
+    let saturation = getRandomNumber(5, 20);
+    let lightness = getRandomNumber(15, 85);
 
-    for (let y = 1; y <= 10; y++) {
-      shades.push({
-        hslCode: `hsl(${h} ${s} ${y * 10})`,
-        hexCode: hslToHex(h, s, y * 10),
-        textColor: y < 5 ? "#cccccc" : "#1a1a1a",
-      });
-    }
+    let primaryBg = hslToHex(hue, saturation, lightness);
+    let primaryTxt = hslToHex(
+      getRandomNumber(1, 359),
+      getRandomNumber(10, 30),
+      lightness < 40 ? 80 : 10,
+    );
 
-    let hsl = `hsl(${h} ${s} ${l})`;
+    let secondaryColor = hslToHex(
+      hue,
+      saturation,
+      lightness < 40 ? lightness + 15 : lightness - 15,
+    );
+
+    let btnHue = getRandomNumber(1, 359);
+    let btnColor = hslToHex(
+      btnHue,
+      getRandomNumber(40, 70),
+      getRandomNumber(lightness < 40 ? 60 : 15, lightness < 40 ? 85 : 30),
+    );
+    let btnHoverTxt = primaryBg;
+    let name = `${classifyHue(hue)}-${classifyHue(btnHue)}-${lightness < 40 ? "dark" : "light"}`;
+
     return {
       id: uuidv4(),
-      shades: shades,
-      hslCode: hsl,
-      hslValues: {
-        hue: h,
-        saturation: s,
-        lightness: l,
-      },
-      hexCode: hslToHex(h, s, l),
-      textColor: l < 50 ? "#cccccc" : "#1a1a1a",
+      name: name,
+      hue: hue,
+      saturation: saturation,
+      lightness: lightness,
+      primaryBg: primaryBg,
+      primaryTxt: primaryTxt,
+      secondaryColor: secondaryColor,
+      btnColor: btnColor,
+      btnHoverTxt: btnHoverTxt,
+      css: `html[data-theme="${name}"] {
+  --primary-bg: ${primaryBg};
+  --primary-txt: ${primaryTxt};
+
+  --secondary-color: ${secondaryColor};
+
+  --btn-color: ${btnColor};
+  --btn-hover-txt: ${btnHoverTxt};
+}`,
     };
   };
 
-  const getRandomColors = () => {
-    let colors_ = [];
+  const getRandomThemes = () => {
+    let themes_ = [];
     for (let x = 0; x < multiCtx.limit; x++) {
-      colors_.push(getRandomColor());
+      themes_.push(getRandomTheme());
     }
-    multiCtx.setColors(colors_);
+    multiCtx.setThemes(themes_);
   };
 
   useEffect(() => {
-    getRandomColors();
+    getRandomThemes();
   }, [multiCtx.limit, base]);
 
   return (
@@ -82,20 +116,15 @@ export default function Generator() {
           <Button
             border
             icon="oui:generate"
-            onClick={() => getRandomColors()}
+            onClick={() => getRandomThemes()}
           />
           <Button
             icon={allSaved ? "bi:check-lg" : "ic:sharp-save-all"}
             onClick={() => {
-              multiCtx.addColors([...multiCtx.colors]);
+              multiCtx.addThemes([...multiCtx.themes]);
               setAllSaved(true);
               setTimeout(() => setAllSaved(false), 250);
             }}
-          />
-          <Button
-            active={multiCtx.reverseAll}
-            icon="picon:switch"
-            onClick={() => multiCtx.setReverseAll(!multiCtx.reverseAll)}
           />
           <Button
             disabled={multiCtx.limit === 2}
@@ -133,8 +162,8 @@ export default function Generator() {
         </div>
       </div>
       <div className="inner">
-        {multiCtx.colors.map((x) => (
-          <ColorItem key={x.id} item={x} />
+        {multiCtx.themes.map((x) => (
+          <ThemeItem item={x} />
         ))}
       </div>
     </>
