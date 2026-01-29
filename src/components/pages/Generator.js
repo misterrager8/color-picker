@@ -3,6 +3,7 @@ import { MultiContext } from "../../Context";
 import { v4 as uuidv4 } from "uuid";
 import Button from "../atoms/Button";
 import ThemeItem from "../items/ThemeItem";
+import { wordBank } from "../../wordBank";
 
 export default function Generator() {
   const multiCtx = useContext(MultiContext);
@@ -25,6 +26,16 @@ export default function Generator() {
     } else if (hue >= 271 && hue <= 344) {
       return "purple";
     }
+  };
+
+  const generateName = (hue1, hue2) => {
+    let wordBank1 = wordBank.find((x) => x.hue === classifyHue(hue1))?.words;
+    let wordBank2 = wordBank.find((x) => x.hue === classifyHue(hue2))?.words;
+
+    let prefix = wordBank1[Math.floor(Math.random() * wordBank1.length)];
+    let suffix = wordBank2[Math.floor(Math.random() * wordBank2.length)];
+
+    return `${prefix}-${suffix}`;
   };
 
   const hslToHex = (h, s, l) => {
@@ -72,7 +83,7 @@ export default function Generator() {
       getRandomNumber(lightness < 40 ? 60 : 15, lightness < 40 ? 85 : 30),
     );
     let btnHoverTxt = primaryBg;
-    let name = `${classifyHue(hue)}-${classifyHue(btnHue)}-${lightness < 40 ? "dark" : "light"}`;
+    let name = generateName(hue, btnHue);
 
     return {
       id: uuidv4(),

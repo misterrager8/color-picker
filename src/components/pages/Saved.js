@@ -43,6 +43,28 @@ export default function Saved() {
     setTimeout(() => setCopied(false), 1000);
   };
 
+  const copyThemeNames = () => {
+    let names = [];
+    for (let x = 0; x < multiCtx.savedThemes.length; x++) {
+      names.push(`"${multiCtx.savedThemes[x].name}",`);
+    }
+
+    navigator.clipboard.writeText(`${names.join("\n")}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
+  const copyThemes = () => {
+    let themes = [];
+    for (let x = 0; x < multiCtx.savedThemes.length; x++) {
+      themes.push(cssString(multiCtx.savedThemes[x]));
+    }
+
+    navigator.clipboard.writeText(`${themes.join("\n\n")}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
   useEffect(() => {
     setDeletingAll(false);
   }, [multiCtx.currentPage]);
@@ -92,6 +114,18 @@ export default function Saved() {
               onClick={() => setFilter(null)}
               active={!filter}
             />
+
+            <Button
+              // icon="bi:copy"
+              text="copy all names"
+              onClick={() => copyThemeNames()}
+            />
+
+            <Button
+              // icon="bi:copy"
+              text="copy all themes"
+              onClick={() => copyThemes()}
+            />
             <Button
               icon="streamline-plump:clean-broom-wipe-solid"
               onClick={() => setDeletingAll(!deletingAll)}
@@ -105,6 +139,7 @@ export default function Saved() {
           </div>
         )}
       </div>
+
       <div className="row m-0">
         <div
           className="col-6 row m-0 p-0"
