@@ -85,15 +85,6 @@ export default function Generator() {
       secondaryColor: secondaryColor,
       btnColor: btnColor,
       btnHoverTxt: btnHoverTxt,
-      css: `html[data-theme="${name}"] {
-  --primary-bg: ${primaryBg};
-  --primary-txt: ${primaryTxt};
-
-  --secondary-color: ${secondaryColor};
-
-  --btn-color: ${btnColor};
-  --btn-hover-txt: ${btnHoverTxt};
-}`,
     };
   };
 

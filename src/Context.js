@@ -2,6 +2,18 @@ import { createContext, useEffect, useState } from "react";
 
 export const MultiContext = createContext();
 
+export function cssString(theme_) {
+  return `html[data-theme="${theme_?.name}"] {
+  --primary-bg: ${theme_?.primaryBg};
+  --primary-txt: ${theme_?.primaryTxt};
+
+  --secondary-color: ${theme_?.secondaryColor};
+
+  --btn-color: ${theme_?.btnColor};
+  --btn-hover-txt: ${theme_?.btnHoverTxt};
+}`;
+}
+
 export default function Context({ children }) {
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(5);

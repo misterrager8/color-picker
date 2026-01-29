@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { MultiContext } from "../../Context";
+import { cssString, MultiContext } from "../../Context";
 import SavedThemeItem from "../items/SavedThemeItem";
 import Button from "../atoms/Button";
 import Dropdown from "../atoms/Dropdown";
@@ -38,7 +38,7 @@ export default function Saved() {
   ];
 
   const copyTheme = () => {
-    navigator.clipboard.writeText(multiCtx.currentTheme?.css);
+    navigator.clipboard.writeText(cssString(multiCtx.currentTheme));
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
   };

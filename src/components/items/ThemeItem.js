@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { MultiContext } from "../../Context";
+import { cssString, MultiContext } from "../../Context";
 import { Icon } from "@iconify/react";
 
 export default function ThemeItem({ item }) {
@@ -7,7 +7,7 @@ export default function ThemeItem({ item }) {
   const [copied, setCopied] = useState(false);
 
   const copyTheme = () => {
-    navigator.clipboard.writeText(item.css);
+    navigator.clipboard.writeText(cssString(item));
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
   };
