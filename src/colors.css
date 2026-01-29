@@ -1,10 +1,10 @@
 :root,
-html[data-theme="red-red-light"] {
-  --primary-bg: #ab9b9b;
-  --primary-txt: #152112;
+html[data-theme="cherry-denim"] {
+  --primary-bg: #dcd2d0;
+  --primary-txt: #201613;
 
-  --secondary-color: #887272;
+  --secondary-color: #bba7a5;
 
-  --btn-color: #3c1517;
-  --btn-hover-txt: #ab9b9b;
+  --btn-color: #15486f;
+  --btn-hover-txt: #dcd2d0;
 }

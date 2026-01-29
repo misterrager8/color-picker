@@ -13,6 +13,9 @@ export default function Saved() {
   const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  const [exporting, setExporting] = useState(false);
+  const [exported, setExported] = useState(false);
+
   const [themeName, setThemeName] = useState("");
   const onChangeThemeName = (e) => setThemeName(e.target.value);
 
@@ -50,8 +53,8 @@ export default function Saved() {
     }
 
     navigator.clipboard.writeText(`${names.join("\n")}`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    setExported(true);
+    setTimeout(() => setExported(false), 250);
   };
 
   const copyThemes = () => {
@@ -61,8 +64,8 @@ export default function Saved() {
     }
 
     navigator.clipboard.writeText(`${themes.join("\n\n")}`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    setExported(true);
+    setTimeout(() => setExported(false), 250);
   };
 
   useEffect(() => {
@@ -114,18 +117,18 @@ export default function Saved() {
               onClick={() => setFilter(null)}
               active={!filter}
             />
-
             <Button
-              // icon="bi:copy"
-              text="copy all names"
-              onClick={() => copyThemeNames()}
+              active={exporting}
+              icon={exported ? "bi:check-lg" : "bi:copy"}
+              text="Export"
+              onClick={() => setExporting(!exporting)}
             />
-
-            <Button
-              // icon="bi:copy"
-              text="copy all themes"
-              onClick={() => copyThemes()}
-            />
+            {exporting && (
+              <>
+                <Button text="Names" onClick={() => copyThemeNames()} />
+                <Button text="All" onClick={() => copyThemes()} />
+              </>
+            )}
             <Button
               icon="streamline-plump:clean-broom-wipe-solid"
               onClick={() => setDeletingAll(!deletingAll)}

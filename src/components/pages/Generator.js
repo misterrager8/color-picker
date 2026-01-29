@@ -32,10 +32,10 @@ export default function Generator() {
     let wordBank1 = wordBank.find((x) => x.hue === classifyHue(hue1))?.words;
     let wordBank2 = wordBank.find((x) => x.hue === classifyHue(hue2))?.words;
 
-    let prefix = wordBank1[Math.floor(Math.random() * wordBank1.length)];
-    let suffix = wordBank2[Math.floor(Math.random() * wordBank2.length)];
+    let prefix = wordBank2[Math.floor(Math.random() * wordBank2.length)];
+    let suffix = wordBank1[Math.floor(Math.random() * wordBank1.length)];
 
-    return `${prefix}-${suffix}`;
+    return prefix !== suffix ? `${prefix}-${suffix}` : `double-${prefix}`;
   };
 
   const hslToHex = (h, s, l) => {
