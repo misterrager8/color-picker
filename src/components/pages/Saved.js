@@ -215,6 +215,13 @@ export default function Saved() {
                     }}>
                     <div className="fw-bold mb-1">Background Color</div>
                     <div
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          multiCtx.currentTheme?.primaryBg?.slice(1),
+                        );
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 500);
+                      }}
                       style={{
                         textTransform: "uppercase",
                         color: multiCtx.currentTheme?.primaryTxt,
@@ -257,6 +264,13 @@ export default function Saved() {
                     }}>
                     <div className="fw-bold mb-1">Button Color</div>
                     <div
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          multiCtx.currentTheme?.btnColor?.slice(1),
+                        );
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 500);
+                      }}
                       style={{
                         textTransform: "uppercase",
                         color: multiCtx.currentTheme?.btnColor,

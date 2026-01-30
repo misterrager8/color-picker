@@ -34,7 +34,15 @@ export default function ThemeItem({ item }) {
       </div>
       <div className="text-uppercase">
         <div className="fw-bold" style={{ color: item.primaryTxt }}>
-          <div className="m-2">{item.primaryBg}</div>
+          <div
+            onClick={() => {
+              navigator.clipboard.writeText(item.primaryBg?.slice(1));
+              setCopied(true);
+              setTimeout(() => setCopied(false), 500);
+            }}
+            className="m-2">
+            {item.primaryBg}
+          </div>
           <div className="m-2">{item.primaryTxt}</div>
           <div className="m-2" style={{ color: item.secondaryColor }}>
             {item.secondaryColor}
@@ -42,6 +50,11 @@ export default function ThemeItem({ item }) {
         </div>
         <div className="d-flex flex-column">
           <button
+            onClick={() => {
+              navigator.clipboard.writeText(item.btnColor?.slice(1));
+              setCopied(true);
+              setTimeout(() => setCopied(false), 500);
+            }}
             className="m-2 text-uppercase"
             style={{
               backgroundColor: "transparent",
