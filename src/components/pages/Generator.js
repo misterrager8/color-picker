@@ -61,7 +61,14 @@ export default function Generator() {
   const getRandomTheme = () => {
     let hue = getRandomNumber(1, 359);
     let saturation = getRandomNumber(5, 20);
-    let lightness = getRandomNumber(15, 85);
+
+    let lightness =
+      base !== "both"
+        ? getRandomNumber(
+            base === "light" ? 60 : 15,
+            base === "light" ? 85 : 39,
+          )
+        : getRandomNumber(15, 85);
 
     let primaryBg = hslToHex(hue, saturation, lightness);
     let primaryTxt = hslToHex(
