@@ -11,6 +11,14 @@ export function cssString(theme_) {
 
   --btn-color: ${theme_?.btnColor};
   --btn-hover-txt: ${theme_?.btnHoverTxt};
+
+  --red: ${theme_?.red};
+  --orange: ${theme_?.orange};
+  --yellow: ${theme_?.yellow};
+  --green: ${theme_?.green};
+  --blue: ${theme_?.blue};
+  --indigo: ${theme_?.indigo};
+  --purple: ${theme_?.purple};
 }`;
 }
 

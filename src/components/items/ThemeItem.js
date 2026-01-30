@@ -95,7 +95,50 @@ export default function ThemeItem({ item }) {
           </button>
         </div>
       </div>
-      <div></div>
+      <div className="d-flex mx-auto">
+        <Icon
+          className="m-1"
+          style={{ color: item.red }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.orange }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.yellow }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.green }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.blue }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.indigo }}
+          inline
+          icon="bi:circle-fill"
+        />
+        <Icon
+          className="m-1"
+          style={{ color: item.purple }}
+          inline
+          icon="bi:circle-fill"
+        />
+      </div>
     </div>
   );
 }

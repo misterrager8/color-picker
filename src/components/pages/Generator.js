@@ -85,6 +85,38 @@ export default function Generator() {
     let btnHoverTxt = primaryBg;
     let name = generateName(hue, btnHue);
 
+    let red = hslToHex(getRandomNumber(345, 360), 90, lightness < 40 ? 55 : 45);
+    let orange = hslToHex(
+      getRandomNumber(16, 45),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+    let yellow = hslToHex(
+      getRandomNumber(46, 75),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+    let green = hslToHex(
+      getRandomNumber(76, 150),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+    let blue = hslToHex(
+      getRandomNumber(151, 240),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+    let indigo = hslToHex(
+      getRandomNumber(241, 270),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+    let purple = hslToHex(
+      getRandomNumber(271, 301),
+      90,
+      lightness < 40 ? 55 : 45,
+    );
+
     return {
       id: uuidv4(),
       name: name,
@@ -96,6 +128,14 @@ export default function Generator() {
       secondaryColor: secondaryColor,
       btnColor: btnColor,
       btnHoverTxt: btnHoverTxt,
+
+      red: red,
+      orange: orange,
+      yellow: yellow,
+      green: green,
+      blue: blue,
+      indigo: indigo,
+      purple: purple,
     };
   };
 
